@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Sign in</title>
-</head>
-<body>
+
+{% extends "base.html" %}
+
+{% block  content %}
   <form action="/request_token" method="post">
     <p>Username:</p>
     <input type="text" name="username">
@@ -13,5 +12,5 @@
       <input type="submit" value="Sign in">
     </p>
   </form>
-</body>
-</html>
+
+{% endblock %}

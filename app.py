@@ -82,7 +82,7 @@ def request_token():
     access_token = contents.get('access_token')
 
     # Writes access token to the cookie
-    response = make_response(redirect(THIS_PATH + '/resource/' + username))
+    response = make_response(redirect(THIS_PATH + '/resource/' + username + '/'))
     response.set_cookie('access_token', access_token)
 
     return response
