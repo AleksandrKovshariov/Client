@@ -5,8 +5,8 @@ import datetime
 from flask import (Flask, make_response, render_template, redirect, request,
                    url_for)
 
-AUTH_PATH = 'http://localhost:6789'
-RES_PATH = 'http://localhost:6790'
+AUTH_PATH = 'http://52.56.152.192:6002'
+RES_PATH = 'http://52.56.152.192:80'
 
 CLIENT_ID = 'sample-client-id'
 CLIENT_SECRET = 'sample-client-secret'
