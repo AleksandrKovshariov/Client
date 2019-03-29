@@ -7,7 +7,6 @@ from flask import (Flask, make_response, render_template, redirect, request,
 
 AUTH_PATH = 'http://localhost:6789'
 RES_PATH = 'http://localhost:6790'
-THIS_PATH = 'http://localhost:5000'
 
 CLIENT_ID = 'sample-client-id'
 CLIENT_SECRET = 'sample-client-secret'
@@ -33,11 +32,20 @@ def parse_dir_structure(text):
         file['modified'] = datetime.datetime.fromtimestamp(file['modified'] / 1000).strftime('%Y-%m-%d %H:%M:%S')
         array.append(file)
     return array
+@app.route('/access')
+def access():
+    access_token = request.cookies.get('access_token')
+    r = requests.get(RES_PATH + '/access', headers = {
+    'Authorization': 'Bearer {}'.format(access_token)})
+    print(r.status_code)
+    content = json.loads(r.text).get('access')
+    return render_template('accesses.html', accesses = content)
+
 
 @app.route('/resource/<path:subpath>')
 def resourse(subpath):
     access_token = request.cookies.get('access_token')
-    r = requests.get(RES_PATH + '/' + subpath, headers = {
+    r = requests.get(RES_PATH + '/resource/' + subpath, headers = {
         'Authorization': 'Bearer {}'.format(access_token)
     })
 
@@ -81,8 +89,7 @@ def request_token():
     contents = json.loads(r.text)
     access_token = contents.get('access_token')
 
-    # Writes access token to the cookie
-    response = make_response(redirect(THIS_PATH + '/resource/' + username + '/'))
+    response = make_response(redirect(request.url_root + 'resource/' + username + '/'))
     response.set_cookie('access_token', access_token)
 
     return response

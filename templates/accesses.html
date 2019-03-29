@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block content %}
+    <table style="width:100%">
+        <h1>MyAccesses</h1>
+        {% for access in accesses %}
+            <tr>
+                <td>
+                    <a href="./{{ access }}">
+                        {{ access}}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
