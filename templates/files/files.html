@@ -6,7 +6,7 @@
   <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         {% for d in path %}
-          <li class="breadcrumb-item"><a href="#">{{ d }}</a></li>
+          <li class="breadcrumb-item"><a href="{{ url_for('files.resource', sub_path=d[1]) }}">{{ d[0] }}</a></li>
         {% endfor %}
           <li class="breadcrumb-item active" aria-current="page">{{ dir }}</li>
       </ol>

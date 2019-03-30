@@ -55,10 +55,15 @@ def resource(sub_path):
         }), 500
 
     if req.headers.get('Type') == 'directory':
-        print(req.text)
-        path = sub_path.split('/')[:-1]
-        dir = path[-1]
-        path = path[:-1]
+        sub_path = sub_path.split('/')
+        if '' in sub_path:
+            sub_path.remove('')
+        dir = sub_path[-1]
+        sub_path = sub_path[:-1]
+        path = []
+        for i, d in enumerate(sub_path):
+            path.append((d, '/'.join(sub_path[:i + 1])))
+
         return render_template('files/files.html',
                                files=parse_dir_structure(req.text),
                                dir=dir,
