@@ -2,8 +2,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <table style="width:100%">
-        <h1>MyAccesses</h1>
+<div class="container">
+  <div class="row justify-content-md-center align-items-center">
+    <h1>My Accesses</h1>
+    <table class="table">
         {% for access in accesses %}
             <tr>
                 <td>
@@ -14,4 +16,6 @@
             </tr>
         {% endfor %}
     </table>
+  </div>
+</div>
 {% endblock %}

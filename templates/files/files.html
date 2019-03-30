@@ -4,9 +4,15 @@
 {% block content %}
 <div class="container">
   <div class="row justify-content-md-center align-items-center">
-    <div class="col-md-8">
-        <table style="width:100%">
-          <h1>Files</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Size</th>
+          <th scope="col">Modified</th>
+          <th scope="col">Directory</th>
+        </tr>
+      </thead>
           {% for user in users %}
           <tr>
               <td>
@@ -14,13 +20,12 @@
                       {{ user['name'] }}
                   </a>
               </td>
-            <td>{{ user['size'] }}< /td>
+            <td>{{ user['size'] }}</td>
             <td>{{ user['modified'] }}</td>
             <td>{{ user['isDir'] }}</td>
           </tr>
           {% endfor %}
-        </table>
-    </div>
+    </table>
   </div>
 </div>
 {% endblock %}

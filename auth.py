@@ -33,6 +33,7 @@ def login():
 
         session.clear()
         session['access_token'] = contents.get('access_token')
+        session['username'] = username
         return redirect(url_for('files.access'))
 
     return render_template('auth/login.html')
@@ -47,6 +48,7 @@ def logout():
 @bp.before_app_request
 def load_logged_in_user():
     g.access_token = session.get('access_token')
+    g.username = session.get('username')
 
 
 def login_required(view):
