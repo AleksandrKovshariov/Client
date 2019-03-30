@@ -51,6 +51,6 @@ def resourse(subpath):
         }), 500
 
     if req.headers.get('Type') == 'directory':
-        return render_template('files/files.html', users=parse_dir_structure(req.text))
+        return render_template('files/files.html', files=parse_dir_structure(req.text))
 
     return req.content, req.status_code, req.headers.items()
