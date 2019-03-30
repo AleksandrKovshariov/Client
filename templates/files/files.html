@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-md-center align-items-center">
+    <div class="col-md-8">
+        <table style="width:100%">
+          <h1>Files</h1>
+          {% for user in users %}
+          <tr>
+              <td>
+                  <a href="./{{ user['name'] }}">
+                      {{ user['name'] }}
+                  </a>
+              </td>
+            <td>{{ user['size'] }}< /td>
+            <td>{{ user['modified'] }}</td>
+            <td>{{ user['isDir'] }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

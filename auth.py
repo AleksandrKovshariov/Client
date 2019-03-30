@@ -1,0 +1,60 @@
+import json
+import requests
+import functools
+
+from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+
+from auth_settings import AUTH_PATH, CLIENT_ID, CLIENT_SECRET
+
+
+bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+
+@bp.route('/login', methods=('GET', 'POST'))
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        req = requests.post(AUTH_PATH, data={
+            'grant_type': 'password',
+            'username': username,
+            'password': password,
+            'client_id': CLIENT_ID,
+            'client_secret': CLIENT_SECRET,
+        })
+
+        if req.status_code != 200:
+            return json.dumps({
+                'error': 'The authorization server returns an error: \n{}'.format(
+                    req.text)
+            }), 500
+
+        contents = json.loads(req.text)
+
+        session.clear()
+        session['access_token'] = contents.get('access_token')
+        return redirect(url_for('files.access'))
+
+    return render_template('auth/login.html')
+
+
+@bp.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('auth.login'))
+
+
+@bp.before_app_request
+def load_logged_in_user():
+    g.access_token = session.get('access_token')
+
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.access_token is None:
+            return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
