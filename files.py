@@ -13,13 +13,17 @@ from resource_settings import RES_PATH
 bp = Blueprint('files', __name__)
 
 
+@bp.route('/')
+def index():
+    return render_template('index.html')
+
+
 @bp.route('/access')
 @login_required
 def access():
     access_token = session['access_token']
     r = requests.get(RES_PATH + '/access', headers={
         'Authorization': 'Bearer {}'.format(access_token)})
-    print(r.status_code)
     content = json.loads(r.text).get('access')
     return render_template('files/accesses.html', accesses=content)
 
