@@ -3,6 +3,14 @@
 
 {% block content %}
 <div class="container">
+  <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        {% for d in path %}
+          <li class="breadcrumb-item"><a href="#">{{ d }}</a></li>
+        {% endfor %}
+          <li class="breadcrumb-item active" aria-current="page">{{ dir }}</li>
+      </ol>
+  </nav>
   <div class="row justify-content-md-center align-items-center">
     <table class="table">
       <thead>

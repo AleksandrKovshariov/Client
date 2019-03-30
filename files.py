@@ -44,7 +44,7 @@ def parse_dir_structure(text):
 @login_required
 def resource(sub_path):
     access_token = session['access_token']
-    req = requests.get(RES_PATH + sub_path, headers={
+    req = requests.get(RES_PATH + '/resource/' + sub_path, headers={
         'Authorization': 'Bearer {}'.format(access_token)
     })
 
@@ -55,6 +55,14 @@ def resource(sub_path):
         }), 500
 
     if req.headers.get('Type') == 'directory':
-        return render_template('files/files.html', files=parse_dir_structure(req.text))
+        print(req.text)
+        path = sub_path.split('/')[:-1]
+        dir = path[-1]
+        path = path[:-1]
+        return render_template('files/files.html',
+                               files=parse_dir_structure(req.text),
+                               dir=dir,
+                               path=path
+                               )
 
     return req.content, req.status_code, req.headers.items()
