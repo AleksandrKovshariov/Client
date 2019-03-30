@@ -49,7 +49,7 @@ def resource(sub_path):
     })
 
     if req.status_code != 200:
-        return render_template('files/file_error.html')
+        return render_template('service_not_available.html')
 
     if req.headers.get('Type') == 'directory':
         sub_path = sub_path.split('/')
@@ -68,3 +68,22 @@ def resource(sub_path):
                                )
 
     return req.content, req.status_code, req.headers.items()
+
+
+@bp.route('/upload', methods=('GET', 'POST'))
+@login_required
+def upload():
+    if request.method == 'POST':
+        if 'file' not in request.files or request.files['file'].filename == '':
+            return render_template('files/upload.html', file_not_found=True)
+        file = request.files['file']
+        access_token = session['access_token']
+
+        # TODO
+        # Реквест на сохранением файла,
+        # если успех запиши в переменную path путь к новому файлу
+        path = "path/to/file/file.type"
+
+        return render_template('files/upload.html', path=path)
+
+    return render_template('files/upload.html')

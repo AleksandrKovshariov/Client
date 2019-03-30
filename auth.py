@@ -24,10 +24,7 @@ def login():
         })
 
         if req.status_code != 200:
-            return json.dumps({
-                'error': 'The authorization server returns an error: \n{}'.format(
-                    req.text)
-            }), 500
+            return render_template('service_not_available.html')
 
         contents = json.loads(req.text)
 
