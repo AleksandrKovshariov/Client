@@ -9,7 +9,7 @@
         {% for access in accesses %}
             <tr>
                 <td>
-                    <a href="./{{ access }}">
+                    <a href="{{ url_for('files.resource', sub_path=access) }}">
                         {{ access}}
                     </a>
                 </td>

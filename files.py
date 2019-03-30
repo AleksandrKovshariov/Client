@@ -40,17 +40,17 @@ def parse_dir_structure(text):
     return array
 
 
-@bp.route('/resource/<path:subpath>')
+@bp.route('/resource/<path:sub_path>')
 @login_required
-def resourse(subpath):
+def resource(sub_path):
     access_token = session['access_token']
-    req = requests.get(RES_PATH + '/resource/' + subpath, headers={
+    req = requests.get(RES_PATH + sub_path, headers={
         'Authorization': 'Bearer {}'.format(access_token)
     })
 
     if req.status_code != 200:
         return json.dumps({
-            'error': 'The resource server returns an error: \n{}'.format(
+            'error': 'The resource server returns an error: {}'.format(
                 req.text)
         }), 500
 

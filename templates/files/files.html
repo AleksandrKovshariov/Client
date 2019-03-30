@@ -16,7 +16,7 @@
           {% for file in files %}
           <tr>
               <td>
-                  <a href="{{ file['name'] }}">
+                  <a href="{{ url_for('files.resource', sub_path=file['path']) }}">
                       {{ file['name'] }}
                   </a>
               </td>
