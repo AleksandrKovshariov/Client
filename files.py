@@ -30,11 +30,11 @@ def access():
 
 def parse_dir_structure(text):
     contents = json.loads(text)
-    users = contents.get('files')
+    files = contents.get('files')
 
     array = []
-    for user in users:
-        file = json.loads(user)
+    for f in files:
+        file = json.loads(f)
         file['modified'] = datetime.datetime.fromtimestamp(file['modified'] / 1000).strftime('%Y-%m-%d %H:%M:%S')
         array.append(file)
     return array
@@ -49,10 +49,7 @@ def resource(sub_path):
     })
 
     if req.status_code != 200:
-        return json.dumps({
-            'error': 'The resource server returns an error: {}'.format(
-                req.text)
-        }), 500
+        return render_template('files/file_error.html')
 
     if req.headers.get('Type') == 'directory':
         sub_path = sub_path.split('/')
