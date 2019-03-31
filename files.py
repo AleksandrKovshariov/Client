@@ -22,7 +22,7 @@ def index():
 @login_required
 def access():
     access_token = session['access_token']
-    r = requests.get(RES_PATH + '/access', headers={
+    r = requests.get(RES_PATH + request.script_root + request.full_path, headers={
         'Authorization': 'Bearer {}'.format(access_token)})
     content = json.loads(r.text).get('access')
     return render_template('files/accesses.html', accesses=content)
@@ -88,7 +88,7 @@ def upload():
 
         return render_template('files/upload.html', path=path)
 
-    r = requests.get(RES_PATH + '/access', headers={
+    r = requests.get(RES_PATH + '/access?is_dir=true', headers={
         'Authorization': 'Bearer {}'.format(access_token)})
     access_dir = json.loads(r.text).get('access')
 
