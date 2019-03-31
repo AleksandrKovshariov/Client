@@ -9,9 +9,14 @@
         {% for access in accesses %}
             <tr>
                 <td>
-                    <a href="{{ url_for('files.resource', sub_path=access) }}">
-                        {{ access}}
+                    <a href="{{ url_for('files.resource', sub_path=access['path']) }}">
+                        {{ access['path']}}
                     </a>
+                </td>
+                <td>
+                    <div>
+                        {{ access['accessType'] }}
+                    </div>
                 </td>
             </tr>
         {% endfor %}
