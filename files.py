@@ -22,9 +22,13 @@ def index():
 @login_required
 def access():
     access_token = session['access_token']
-    r = requests.get(RES_PATH + request.script_root + request.full_path, headers={
-        'Authorization': 'Bearer {}'.format(access_token)})
-    content = json.loads(r.text).get('access')
+    try:
+        req = requests.get(RES_PATH + request.script_root + request.full_path, headers={
+            'Authorization': 'Bearer {}'.format(access_token)})
+    except requests.exceptions.RequestException:
+        return render_template('service_not_available.html')
+
+    content = json.loads(req.text).get('access')
     return render_template('files/accesses.html', accesses=content)
 
 
@@ -44,9 +48,12 @@ def parse_dir_structure(text):
 @login_required
 def resource(sub_path):
     access_token = session['access_token']
-    req = requests.get(RES_PATH + '/resource/' + sub_path, headers={
-        'Authorization': 'Bearer {}'.format(access_token)
-    })
+    try:
+        req = requests.get(RES_PATH + '/resource/' + sub_path, headers={
+            'Authorization': 'Bearer {}'.format(access_token)
+        })
+    except requests.exceptions.RequestException:
+        return render_template('service_not_available.html')
 
     if req.status_code != 200:
         return render_template('service_not_available.html')
@@ -88,8 +95,12 @@ def upload():
 
         return render_template('files/upload.html', path=path)
 
-    r = requests.get(RES_PATH + '/access?is_dir=true', headers={
-        'Authorization': 'Bearer {}'.format(access_token)})
+    try:
+        r = requests.get(RES_PATH + '/access?is_dir=true', headers={
+            'Authorization': 'Bearer {}'.format(access_token)})
+    except requests.exceptions.RequestException:
+        return render_template('service_not_available.html')
+
     access_dir = json.loads(r.text).get('access')
 
     return render_template('files/upload.html', access_dir=access_dir)

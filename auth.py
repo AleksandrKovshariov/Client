@@ -15,13 +15,16 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        req = requests.post(AUTH_PATH, data={
-            'grant_type': 'password',
-            'username': username,
-            'password': password,
-            'client_id': CLIENT_ID,
-            'client_secret': CLIENT_SECRET,
-        })
+        try:
+            req = requests.post(AUTH_PATH, data={
+                'grant_type': 'password',
+                'username': username,
+                'password': password,
+                'client_id': CLIENT_ID,
+                'client_secret': CLIENT_SECRET,
+            })
+        except requests.exceptions.RequestException:
+            return render_template('service_not_available.html')
 
         if req.status_code != 200:
             return render_template('service_not_available.html')
