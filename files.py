@@ -100,7 +100,7 @@ def upload():
         return render_template('files/upload.html', path=path)
 
     try:
-        r = requests.get(RES_PATH + '/access?is_dir=true', headers={
+        r = requests.get(RES_PATH + '/access?is_dir=true&access_type=write', headers={
             'Authorization': 'Bearer {}'.format(access_token)})
     except requests.exceptions.RequestException:
         return render_template('service_not_available.html')
