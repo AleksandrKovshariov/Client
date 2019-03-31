@@ -73,11 +73,13 @@ def resource(sub_path):
 @bp.route('/upload', methods=('GET', 'POST'))
 @login_required
 def upload():
+    access_token = session['access_token']
+
     if request.method == 'POST':
         if 'file' not in request.files or request.files['file'].filename == '':
             return render_template('files/upload.html', file_not_found=True)
         file = request.files['file']
-        access_token = session['access_token']
+        to_dir = request.form['to_dir']
 
         # TODO
         # Реквест на сохранением файла,
@@ -86,4 +88,8 @@ def upload():
 
         return render_template('files/upload.html', path=path)
 
-    return render_template('files/upload.html')
+    r = requests.get(RES_PATH + '/access', headers={
+        'Authorization': 'Bearer {}'.format(access_token)})
+    access_dir = json.loads(r.text).get('access')
+
+    return render_template('files/upload.html', access_dir=access_dir)

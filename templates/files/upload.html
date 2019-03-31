@@ -21,8 +21,16 @@
       <hr class="my-4">
       <form method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label>Choose file</label>
+            <label>Choose file:</label>
             <input type="file" name="file" class="form-control-file" id="file" required/>
+        </div>
+        <div class="form-group">
+            <label>Save to directory:</label>
+            <select name="to_dir" class="form-control" required>
+              {% for access in access_dir %}
+                <option value="{{ access['path'] }}">{{ access['path'] }}</option>
+              {% endfor %}
+            </select>
         </div>
         <div>
             <input type="submit" class="btn btn-primary form-control" value="Upload"/>
