@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 {% extends "base.html" %}
 
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/files.css') }}">
+{% endblock %}
+
 {% block content %}
 <br>
 <div class="container">
@@ -19,19 +23,22 @@
           <th scope="col">Name</th>
           <th scope="col">Size</th>
           <th scope="col">Modified</th>
-          <th scope="col">Directory</th>
         </tr>
       </thead>
           {% for file in files %}
           <tr>
-              <td>
-                  <a href="{{ url_for('files.resource', sub_path=file['path']) }}">
-                      {{ file['name'] }}
-                  </a>
-              </td>
+            <td>
+              {% if file['isDir'] %}
+                  <img class="file_icon" src="{{ url_for('static', filename='img/icon_dir.png') }}" alt="Directory">
+              {% else %}
+                  <img class="file_icon" src="{{ url_for('static', filename='img/icon_file.png') }}" alt="File">
+              {% endif %}
+              <a href="{{ url_for('files.resource', sub_path=file['path']) }}">
+                  {{ file['name'] }}
+              </a>
+            </td>
             <td>{{ file['size'] }}</td>
             <td>{{ file['modified'] }}</td>
-            <td>{{ file['isDir'] }}</td>
           </tr>
           {% endfor %}
     </table>
