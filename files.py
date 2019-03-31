@@ -1,3 +1,4 @@
+import re
 import json
 import requests
 import datetime
@@ -28,8 +29,11 @@ def access():
     except requests.exceptions.RequestException:
         return render_template('service_not_available.html')
 
-    content = json.loads(req.text).get('access')
-    return render_template('files/accesses.html', accesses=content)
+    accesses = json.loads(req.text).get('access')
+    for acc in accesses:
+        acc['accessType'] = re.sub("[\][]", "", acc['accessType'])
+
+    return render_template('files/accesses.html', accesses=accesses)
 
 
 def parse_dir_structure(text):
