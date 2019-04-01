@@ -1,1 +1,1 @@
-RES_PATH = 'http://52.56.152.192:80'
+RES_PATH = 'http://localhost:6790'

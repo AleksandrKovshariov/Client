@@ -18,18 +18,33 @@ bp = Blueprint('files', __name__)
 def index():
     return render_template('index.html')
 
+def render_error(req):
+    try:
+        error_type = json.loads(req.text).get('error')
+        if(error_type is None):
+            return render_template('service_not_available.html', string="This is strange...")
+        return render_template('service_not_available.html', string=error_type)
+    except ValueError:
+        return render_template('service_not_available.html', string='Whooops... resource server error')
+
 
 @bp.route('/access')
 @login_required
 def access():
     access_token = session['access_token']
+    print(access_token)
     try:
         req = requests.get(RES_PATH + request.script_root + request.full_path, headers={
             'Authorization': 'Bearer {}'.format(access_token)})
     except requests.exceptions.RequestException:
-        return render_template('service_not_available.html')
+        return render_template('service_not_available.html', string="Can't send a request to the server")
+
+    print(req.status_code)
+    if not req.status_code == 200:
+        return render_error(req)
 
     accesses = json.loads(req.text).get('access')
+    print(accesses)
     for acc in accesses:
         acc['accessType'] = re.sub("[\][]", "", acc['accessType'])
 
@@ -57,10 +72,10 @@ def resource(sub_path):
             'Authorization': 'Bearer {}'.format(access_token)
         })
     except requests.exceptions.RequestException:
-        return render_template('service_not_available.html')
+        return render_template('service_not_available.html', string="Can't send a request to the server")
 
     if req.status_code != 200:
-        return render_template('service_not_available.html')
+        return render_error(req)
 
     if req.headers.get('Type') == 'directory':
         sub_path = sub_path.split('/')
@@ -103,7 +118,7 @@ def upload():
         r = requests.get(RES_PATH + '/access?is_dir=true&access_type=write', headers={
             'Authorization': 'Bearer {}'.format(access_token)})
     except requests.exceptions.RequestException:
-        return render_template('service_not_available.html')
+        return render_template('service_not_available.html', string='Cant send request to authorization server' )
 
     access_dir = json.loads(r.text).get('access')
 
