@@ -32,14 +32,12 @@ def render_error(req):
 @login_required
 def access():
     access_token = session['access_token']
-    print(access_token)
     try:
         req = requests.get(RES_PATH + request.script_root + request.full_path, headers={
             'Authorization': 'Bearer {}'.format(access_token)})
     except requests.exceptions.RequestException:
         return render_template('service_not_available.html', string="Can't send a request to the server")
 
-    print(req.status_code)
     if not req.status_code == 200:
         return render_error(req)
 
@@ -104,13 +102,20 @@ def upload():
     if request.method == 'POST':
         if 'file' not in request.files or request.files['file'].filename == '':
             return render_template('files/upload.html', file_not_found=True)
+
         file = request.files['file']
         to_dir = request.form['to_dir']
+        path = re.sub('[^A-Za-z0-9/\.]+', '',  to_dir + file.filename)
+        try:
+            r = requests.post(RES_PATH + '/resource/' + path, headers={
+            'Authorization': 'Bearer {}'.format(access_token),
+            'Content-Length': request.headers.get('Content-Length')}, data=file)
 
-        # TODO
-        # Реквест на сохранением файла,
-        # если успех запиши в переменную path путь к новому файлу
-        path = "path/to/file/file.type"
+            if not r == 200:
+                render_error(r)
+
+        except requests.exceptions.RequestException:
+            return render_template('service_not_available.html', string="Can't send a request to the server")
 
         return render_template('files/upload.html', path=path)
 
