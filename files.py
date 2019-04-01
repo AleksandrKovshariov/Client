@@ -112,7 +112,7 @@ def upload():
             'Content-Length': request.headers.get('Content-Length')}, data=file)
 
             if not r == 200:
-                render_error(r)
+                return render_error(r)
 
         except requests.exceptions.RequestException:
             return render_template('service_not_available.html', string="Can't send a request to the server")
