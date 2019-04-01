@@ -5,6 +5,7 @@ import functools
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 
 from auth_settings import AUTH_PATH, CLIENT_ID, CLIENT_SECRET
+from files import render_error
 
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -24,10 +25,10 @@ def login():
                 'client_secret': CLIENT_SECRET,
             })
         except requests.exceptions.RequestException:
-            return render_template('service_not_available.html')
+            return render_template('service_not_available.html', message="Can't send a request to the server")
 
         if req.status_code != 200:
-            return render_template('service_not_available.html')
+            return render_error(req)
 
         contents = json.loads(req.text)
 

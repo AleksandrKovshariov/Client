@@ -18,14 +18,15 @@ bp = Blueprint('files', __name__)
 def index():
     return render_template('index.html')
 
+
 def render_error(req):
     try:
         error_type = json.loads(req.text).get('error')
-        if(error_type is None):
-            return render_template('service_not_available.html', string="This is strange...")
-        return render_template('service_not_available.html', string=error_type)
+        if error_type is None:
+            return render_template('service_not_available.html', message="This is strange...")
+        return render_template('service_not_available.html', message=error_type)
     except ValueError:
-        return render_template('service_not_available.html', string='Whooops... resource server error')
+        return render_template('service_not_available.html', message='Whooops... resource server error')
 
 
 @bp.route('/access')
@@ -36,7 +37,7 @@ def access():
         req = requests.get(RES_PATH + request.script_root + request.full_path, headers={
             'Authorization': 'Bearer {}'.format(access_token)})
     except requests.exceptions.RequestException:
-        return render_template('service_not_available.html', string="Can't send a request to the server")
+        return render_template('service_not_available.html', message="Can't send a request to the server")
 
     if not req.status_code == 200:
         return render_error(req)
@@ -69,7 +70,7 @@ def resource(sub_path):
             'Authorization': 'Bearer {}'.format(access_token)
         })
     except requests.exceptions.RequestException:
-        return render_template('service_not_available.html', string="Can't send a request to the server")
+        return render_template('service_not_available.html', message="Can't send a request to the server")
 
     if req.status_code != 200:
         return render_error(req)
@@ -107,14 +108,14 @@ def upload():
         path = re.sub('[^A-Za-z0-9/\.]+', '',  to_dir + file.filename)
         try:
             r = requests.post(RES_PATH + '/resource/' + path, headers={
-            'Authorization': 'Bearer {}'.format(access_token),
-            'Content-Length': request.headers.get('Content-Length')}, data=file)
+                'Authorization': 'Bearer {}'.format(access_token),
+                'Content-Length': request.headers.get('Content-Length')}, data=file)
 
             if not r.status_code == 200:
                 return render_error(r)
 
         except requests.exceptions.RequestException:
-            return render_template('service_not_available.html', string="Can't send a request to the server")
+            return render_template('service_not_available.html', message="Can't send a request to the server")
 
         return render_template('files/upload.html', path=path)
 
@@ -122,7 +123,7 @@ def upload():
         r = requests.get(RES_PATH + '/access?is_dir=true&access_type=write', headers={
             'Authorization': 'Bearer {}'.format(access_token)})
     except requests.exceptions.RequestException:
-        return render_template('service_not_available.html', string='Cant send request to authorization server' )
+        return render_template('service_not_available.html', message='Cant send request to authorization server' )
 
     access_dir = json.loads(r.text).get('access')
 
