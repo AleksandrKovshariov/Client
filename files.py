@@ -42,7 +42,6 @@ def access():
         return render_error(req)
 
     accesses = json.loads(req.text).get('access')
-    print(accesses)
     for acc in accesses:
         acc['accessType'] = re.sub("[\][]", "", acc['accessType'])
 
@@ -111,7 +110,7 @@ def upload():
             'Authorization': 'Bearer {}'.format(access_token),
             'Content-Length': request.headers.get('Content-Length')}, data=file)
 
-            if not r == 200:
+            if not r.status_code == 200:
                 return render_error(r)
 
         except requests.exceptions.RequestException:
