@@ -2,6 +2,10 @@
 
 {% extends "base.html" %}
 
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
+
 {% block  content %}
 <br>
 <div class="container">
@@ -14,7 +18,7 @@
         </div>
       {% endif %}
       {% if path %}
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-success long_word_fix" role="alert">
             File <a href="{{ url_for('files.resource', sub_path=path) }}">"{{ path }}"</a> upload success.
         </div>
       {% endif %}

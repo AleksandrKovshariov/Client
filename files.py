@@ -99,9 +99,17 @@ def resource(sub_path):
 def upload():
     access_token = session['access_token']
 
+    try:
+        r = requests.get(RES_PATH + '/access?is_dir=true&access_type=write', headers={
+            'Authorization': 'Bearer {}'.format(access_token)})
+    except requests.exceptions.RequestException:
+        return render_template('service_not_available.html', message='Cant send request to authorization server')
+
+    access_dir = json.loads(r.text).get('access')
+
     if request.method == 'POST':
         if 'file' not in request.files or request.files['file'].filename == '':
-            return render_template('files/upload.html', file_not_found=True)
+            return render_template('files/upload.html', file_not_found=True, access_dir=access_dir)
 
         file = request.files['file']
         to_dir = request.form['to_dir']
@@ -117,14 +125,6 @@ def upload():
         except requests.exceptions.RequestException:
             return render_template('service_not_available.html', message="Can't send a request to the server")
 
-        return render_template('files/upload.html', path=path)
-
-    try:
-        r = requests.get(RES_PATH + '/access?is_dir=true&access_type=write', headers={
-            'Authorization': 'Bearer {}'.format(access_token)})
-    except requests.exceptions.RequestException:
-        return render_template('service_not_available.html', message='Cant send request to authorization server' )
-
-    access_dir = json.loads(r.text).get('access')
+        return render_template('files/upload.html', path=path, access_dir=access_dir)
 
     return render_template('files/upload.html', access_dir=access_dir)
