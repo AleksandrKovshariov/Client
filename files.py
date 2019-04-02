@@ -94,8 +94,6 @@ def resource(sub_path):
                                dir=dir,
                                path=path
                                )
-
-
     return Response(req.iter_content(chunk_size=1024), headers=req.headers.items())
 
 
