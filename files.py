@@ -5,8 +5,10 @@ import datetime
 
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, session
 from werkzeug.exceptions import abort
+from flask import Response
 
 from auth import login_required
+from flask import stream_with_context
 
 from resource_settings import RES_PATH
 
@@ -40,7 +42,6 @@ def access():
     except requests.exceptions.RequestException:
         return render_template('service_not_available.html', message="Can't send a request to the server")
 
-    print(req.status_code)
     if not req.status_code == 200:
         return render_error(req)
 
@@ -70,7 +71,8 @@ def resource(sub_path):
     try:
         req = requests.get(RES_PATH + '/resource/' + sub_path, headers={
             'Authorization': 'Bearer {}'.format(access_token)
-        })
+        }, stream=True)
+
     except requests.exceptions.RequestException:
         return render_template('service_not_available.html', message="Can't send a request to the server")
 
@@ -93,7 +95,8 @@ def resource(sub_path):
                                path=path
                                )
 
-    return req.content, req.status_code, req.headers.items()
+
+    return Response(stream_with_context(req.iter_content(chunk_size=1024)), content_type = req.headers['content-type'])
 
 
 @bp.route('/upload', methods=('GET', 'POST'))
