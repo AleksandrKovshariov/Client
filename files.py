@@ -95,7 +95,6 @@ def resource(sub_path):
                                path=path
                                )
 
-
     return Response(stream_with_context(req.iter_content(chunk_size=1024)), headers=req.headers.items())
 
 

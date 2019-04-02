@@ -23,6 +23,7 @@
           <th scope="col">Name</th>
           <th scope="col">Size</th>
           <th scope="col">Modified</th>
+          <th scope="col"></th>
         </tr>
       </thead>
           {% for file in files %}
@@ -39,6 +40,11 @@
             </td>
             <td>{{ file['size'] }}</td>
             <td>{{ file['modified'] }}</td>
+            <td>
+                <button type="button" class="btn btn-secondary">
+                    Delete
+                </button>
+            </td>
           </tr>
           {% endfor %}
     </table>
