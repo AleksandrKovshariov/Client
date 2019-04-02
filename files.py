@@ -42,9 +42,10 @@ def delete(sub_path):
             'Authorization': 'Bearer {}'.format(access_token)})
         if not req.status_code == 200:
             return render_error(req)
-        return render_error(req)
+        return render_template('files/file_deleted.html')
     except requests.exceptions.RequestException:
         return render_template('service_not_available.html', message="Can't send a request to the server")
+
 
 @bp.route('/access')
 @login_required
