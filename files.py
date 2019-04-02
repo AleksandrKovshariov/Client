@@ -22,6 +22,7 @@ def index():
 def render_error(req):
     try:
         error_type = json.loads(req.text).get('error')
+        print(error_type)
         if error_type is None:
             return render_template('service_not_available.html', message="This is strange...")
         return render_template('service_not_available.html', message=error_type)
@@ -39,6 +40,7 @@ def access():
     except requests.exceptions.RequestException:
         return render_template('service_not_available.html', message="Can't send a request to the server")
 
+    print(req.status_code)
     if not req.status_code == 200:
         return render_error(req)
 
@@ -102,6 +104,8 @@ def upload():
     try:
         r = requests.get(RES_PATH + '/access?is_dir=true&access_type=write', headers={
             'Authorization': 'Bearer {}'.format(access_token)})
+        if not r.status_code == 200:
+            return render_error(r)
     except requests.exceptions.RequestException:
         return render_template('service_not_available.html', message='Cant send request to authorization server')
 
