@@ -32,6 +32,20 @@ def render_error(req):
         return render_template('service_not_available.html', message='Whooops... resource server error')
 
 
+@bp.route('/delete/<path:sub_path>')
+@login_required
+def delete(sub_path):
+    access_token = session['access_token']
+    file = '/resource/' + sub_path
+    try:
+        req = requests.delete(RES_PATH + file, headers={
+            'Authorization': 'Bearer {}'.format(access_token)})
+        if not req.status_code == 200:
+            return render_error(req)
+        return render_error(req)
+    except requests.exceptions.RequestException:
+        return render_template('service_not_available.html', message="Can't send a request to the server")
+
 @bp.route('/access')
 @login_required
 def access():
