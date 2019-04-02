@@ -145,6 +145,6 @@ def upload():
         except requests.exceptions.RequestException:
             return render_template('service_not_available.html', message="Can't send a request to the server")
 
-        return render_template('files/upload.html', path=path, access_dir=access_dir)
+        return render_template('files/upload_seccess.html', path=path)
 
     return render_template('files/upload.html', access_dir=access_dir)
