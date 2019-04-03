@@ -24,6 +24,7 @@
           <th scope="col">Modified</th>
           <th scope="col">Size</th>
           <th scope="col"></th>
+          <th scope="col"></th>
         </tr>
       </thead>
           {% for file in files %}
@@ -42,7 +43,14 @@
             <td>{{ file['size'] }}</td>
             <td>
                 <form action = "{{ url_for('files.delete', sub_path=file['path']) }}">
-                <button type="submit" class="btn btn-secondary">
+                <button type="submit" class="btn btn-primary">
+                    Download
+                </button>
+                </form>
+            </td>
+            <td>
+                <form action = "{{ url_for('files.delete', sub_path=file['path']) }}">
+                <button type="submit" class="btn btn-danger">
                     Delete
                 </button>
                 </form>
