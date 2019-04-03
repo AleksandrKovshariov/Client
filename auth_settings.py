@@ -1,4 +1,4 @@
-AUTH_PATH = 'http://127.0.0.1:6789'
+AUTH_PATH = 'http://52.56.152.192:6002'
 
 CLIENT_ID = 'sample-client-id'
 CLIENT_SECRET = 'sample-client-secret'
