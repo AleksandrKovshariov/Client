@@ -84,7 +84,7 @@ def parse_dir_structure(text):
 def resource(sub_path):
     access_token = session['access_token']
     try:
-        req = requests.get(RES_PATH + '/resource/' + sub_path, headers={
+        req = requests.get(RES_PATH + request.full_path, headers={
             'Authorization': 'Bearer {}'.format(access_token)
         }, stream=True)
 
