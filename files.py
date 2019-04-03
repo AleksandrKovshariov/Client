@@ -72,7 +72,7 @@ def parse_dir_structure(text):
     files = contents.get('files')
 
     array = []
-    for f in files:
+    for f in files or []:
         file = json.loads(f)
         file['modified'] = datetime.datetime.fromtimestamp(file['modified'] / 1000).strftime('%Y-%m-%d %H:%M:%S')
         array.append(file)
@@ -95,6 +95,7 @@ def resource(sub_path):
         return render_error(req)
 
     if req.headers.get('Type') == 'directory':
+
         sub_path = sub_path.split('/')
         if '' in sub_path:
             sub_path.remove('')
