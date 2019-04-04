@@ -42,7 +42,7 @@
             <td>{{ file['modified'] }}</td>
             <td>{{ file['size'] }}</td>
             <td>
-                <a href="{{ url_for('files.delete', sub_path=file['path']) }}">
+                <a href="{{ url_for('files.resource', sub_path=file['path']) }}" download>
                     <button type="submit" class="btn btn-primary">
                       Download
                     </button>
