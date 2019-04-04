@@ -49,11 +49,13 @@
                 </a>
             </td>
             <td>
-                <form action = "{{ url_for('files.delete', sub_path=file['path']) }}">
-                <button type="submit" class="btn btn-danger">
-                    Delete
-                </button>
-                </form>
+                {% if 'DELETE' in file['accessType'] %}
+                <a href="{{ url_for('files.delete', sub_path=file['path']) }}">
+                    <button type="submit" class="btn btn-danger">
+                        Delete
+                    </button>
+                </a>
+                {% endif %}
             </td>
           </tr>
           {% endfor %}
