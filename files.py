@@ -63,6 +63,8 @@ def access():
     accesses = json.loads(req.text).get('access')
     for acc in accesses:
         acc['accessType'] = re.sub("[\][]", "", acc['accessType'])
+        path = acc['path']
+        acc['pathToRoot'] = path[0:path.rfind('/') + 1]
 
     return render_template('files/accesses.html', accesses=accesses)
 

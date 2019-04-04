@@ -10,6 +10,7 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Access</th>
+            <th scope="col">Go to...</th>
         </tr>
       </thead>
         {% for access in accesses %}
@@ -23,6 +24,13 @@
                     <div>
                         {{ access['accessType'] }}
                     </div>
+                </td>
+                <td>
+                    <a href="{{ url_for('files.resource', sub_path=access['pathToRoot']) }}">
+                        <button type="submit" class="btn btn-primary">
+                            Go to Dir
+                        </button>
+                    </a>
                 </td>
             </tr>
         {% endfor %}
