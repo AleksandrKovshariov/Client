@@ -42,11 +42,11 @@
             <td>{{ file['modified'] }}</td>
             <td>{{ file['size'] }}</td>
             <td>
-                <form action = "{{ url_for('files.delete', sub_path=file['path']) }}">
-                <button type="submit" class="btn btn-primary">
-                    Download
-                </button>
-                </form>
+                <a href="{{ url_for('files.delete', sub_path=file['path']) }}">
+                    <button type="submit" class="btn btn-primary">
+                      Download
+                    </button>
+                </a>
             </td>
             <td>
                 <form action = "{{ url_for('files.delete', sub_path=file['path']) }}">
