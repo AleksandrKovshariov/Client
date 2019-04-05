@@ -29,7 +29,7 @@
       </thead>
           {% for file in files %}
           <tr>
-            <td>
+            <td class="align-middle">
               {% if file['isDir'] %}
                   <img class="file_icon" src="{{ url_for('static', filename='img/icon_dir.png') }}" alt="Directory">
               {% else %}
@@ -39,16 +39,9 @@
                   {{ file['name'] }}
               </a>
             </td>
-            <td>{{ file['modified'] }}</td>
-            <td>{{ file['size'] }}</td>
-            <td>
-                <a href="{{ url_for('files.resource', sub_path=file['path']) }}" download>
-                    <button type="submit" class="btn btn-primary">
-                      Download
-                    </button>
-                </a>
-            </td>
-            <td>
+            <td class="align-middle">{{ file['modified'] }}</td>
+            <td class="align-middle">{{ file['size'] }}</td>
+            <td align="right">
                 {% if 'DELETE' in file['accessType'] %}
                 <a href="{{ url_for('files.delete', sub_path=file['path']) }}">
                     <button type="submit" class="btn btn-danger">
@@ -56,6 +49,13 @@
                     </button>
                 </a>
                 {% endif %}
+            </td>
+            <td align="right">
+                <a href="{{ url_for('files.resource', sub_path=file['path']) }}" download>
+                    <button type="submit" class="btn btn-primary">
+                      Download
+                    </button>
+                </a>
             </td>
           </tr>
           {% endfor %}
