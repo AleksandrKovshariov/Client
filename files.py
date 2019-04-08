@@ -131,23 +131,21 @@ def upload():
     access_dir = json.loads(r.text).get('access')
 
     if request.method == 'POST':
-        if 'file' not in request.files or request.files['file'].filename == '':
-            return render_template('files/upload.html', file_not_found=True, access_dir=access_dir)
+        print(request.headers)
 
-        file = request.files['file']
-        to_dir = request.form['to_dir']
-        path = re.sub('[^A-Za-z0-9/\.]+', '',  to_dir + file.filename)
         try:
-            r = requests.post(RES_PATH + '/resource/' + path, headers={
+            r = requests.post(RES_PATH + '/resource/kovsharov/video.mkv', headers={
                 'Authorization': 'Bearer {}'.format(access_token),
-                'Content-Length': request.headers.get('Content-Length')}, data=file)
+                'Content-Length': request.headers.get('Content-Length'),
+                'Content-Type': request.headers.get('Content-Type')}, data=request.stream)
 
             if not r.status_code == 200:
                 return render_error(r)
 
         except requests.exceptions.RequestException:
             return render_template('service_not_available.html', message="Can't send a request to the server")
-
+        #refactor
+        path = json.loads(r.text).get("saved")[0]
         return render_template('files/upload_seccess.html', path=path)
 
     return render_template('files/upload.html', access_dir=access_dir)
