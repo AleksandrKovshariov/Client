@@ -77,6 +77,13 @@ def parse_dir_structure(text):
     for f in files or []:
         file = json.loads(f)
         file['modified'] = datetime.datetime.fromtimestamp(file['modified'] / 1000).strftime('%Y-%m-%d %H:%M:%S')
+        if not file['size'] == ' ':
+            kb = int(file['size']) / 1024
+            if kb > 1024:
+                file['size'] = str(round(kb / 1024, 1)) + " MB"
+            else:
+                file['size'] = str(round(kb, 1)) + " KB"
+
         array.append(file)
     return array
 
