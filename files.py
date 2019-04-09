@@ -2,6 +2,7 @@ import re
 import json
 import requests
 import datetime
+import mimetypes
 
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, session
 from werkzeug.exceptions import abort
@@ -77,6 +78,12 @@ def parse_dir_structure(text):
     for f in files or []:
         file = json.loads(f)
         file['modified'] = datetime.datetime.fromtimestamp(file['modified'] / 1000).strftime('%Y-%m-%d %H:%M:%S')
+        extension = file['name'][str.rfind(file['name'], '.'):]
+        try:
+            mime = mimetypes.types_map[extension]
+            file['MimeType'] = mime[0 : str.rfind(mime, '/')]
+        except KeyError:
+            file['MimeType'] = None
         if not file['size'] == ' ':
             kb = int(file['size']) / 1024
             if kb > 1024:

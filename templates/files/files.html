@@ -33,7 +33,15 @@
               {% if file['isDir'] %}
                   <img class="file_icon" src="{{ url_for('static', filename='img/icon_dir.png') }}" alt="Directory">
               {% else %}
-                  <img class="file_icon" src="{{ url_for('static', filename='img/icon_file.png') }}" alt="File">
+                  {% if file['MimeType'] == 'video' %}
+                      <img class="file_icon" src="{{ url_for('static', filename='img/video.png') }}" alt="File">
+                  {% elif file['MimeType'] == 'audio'%}
+                      <img class="file_icon" src="{{ url_for('static', filename='img/audio.png') }}" alt="File">
+                  {% elif file['MimeType'] == 'image'%}
+                      <img class="file_icon" src="{{ url_for('static', filename='img/audio.png') }}" alt="File">
+                  {% else %}
+                      <img class="file_icon" src="{{ url_for('static', filename='img/icon_file.png') }}" alt="File">
+                  {% endif %}
               {% endif %}
               <a href="{{ url_for('files.resource', sub_path=file['path']) }}">
                   {{ file['name'] }}
