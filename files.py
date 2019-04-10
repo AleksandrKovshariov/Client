@@ -84,12 +84,15 @@ def parse_dir_structure(text):
             file['MimeType'] = mime[0 : str.rfind(mime, '/')]
         except KeyError:
             file['MimeType'] = None
+            file['metric'] = ' '
         if not file['size'] == ' ':
             kb = int(file['size']) / 1024
             if kb > 1024:
-                file['size'] = str(round(kb / 1024, 1)) + " MB"
+                file['size'] = int(round(kb / 1024, 0))
+                file['metric'] = "MB"
             else:
-                file['size'] = str(round(kb, 1)) + " KB"
+                file['size'] = round(kb, 1)
+                file['metric'] = "KB"
 
         array.append(file)
     return array
