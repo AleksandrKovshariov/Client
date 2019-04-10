@@ -79,6 +79,7 @@
               <th scope="col">Size</th>
               <th scope="col"></th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
           </thead>
               {% for file in files %}
@@ -103,6 +104,7 @@
                 </td>
                 <td class="align-middle">{{ file['modified'] }}</td>
                 <td class="align-middle">{{ file['size'] }}</td>
+                <td class="align-middle">{{ file['metric'] }}</td>
                 <td align="right">
                     {% if 'DELETE' in file['accessType'] %}
                     <a href="{{ url_for('files.delete', sub_path=file['path']) }}">
