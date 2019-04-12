@@ -1,3 +1,5 @@
 <div class="alert alert-success long_word_fix" role="alert">
-    File <a href="{{ url_for('files.resource', sub_path=path) }}">"{{ path }}"</a> upload success.
+    {% for p in path %}
+    File <a href="{{ url_for('files.resource', sub_path=p) }}">"{{ p }}"</a> upload success.
+    {% endfor %}
 </div>

@@ -4,13 +4,10 @@ import requests
 import datetime
 import mimetypes
 
-from flask import Blueprint, flash, g, redirect, render_template, request, url_for, session
-from werkzeug.exceptions import abort
+from flask import Blueprint, render_template, request, session
 from flask import Response
 
 from auth import login_required
-from flask import stream_with_context
-
 from resource_settings import RES_PATH
 
 
@@ -148,10 +145,8 @@ def upload():
     access_dir = json.loads(r.text).get('access')
 
     if request.method == 'POST':
-        print(request.headers)
-
         try:
-            r = requests.post(RES_PATH + '/resource/kovsharov/video.mkv', headers={
+            r = requests.post(RES_PATH, headers={
                 'Authorization': 'Bearer {}'.format(access_token),
                 'Content-Length': request.headers.get('Content-Length'),
                 'Content-Type': request.headers.get('Content-Type')}, data=request.stream)
@@ -161,8 +156,8 @@ def upload():
 
         except requests.exceptions.RequestException:
             return render_template('service_not_available.html', message="Can't send a request to the server")
-        #refactor
-        path = json.loads(r.text).get("saved")[0]
+
+        path = json.loads(r.text).get("saved")
         return render_template('files/upload_seccess.html', path=path)
 
     return render_template('files/upload.html', access_dir=access_dir)
