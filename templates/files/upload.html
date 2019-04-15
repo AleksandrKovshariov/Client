@@ -24,7 +24,11 @@
               <label>Save to directory:</label>
               <select name="to_dir" class="form-control" required>
                   {% for access in access_dir %}
-                      <option value="{{ access['path'] }}">{{ access['path'] }}</option>
+                      <option value="{{ access['path'] }}">{% if file_not_found %}
+                          <div class="alert alert-danger" role="alert">
+                              File to upload not found!
+                          </div>
+                      {% endif %}{{ access['path'] }}</option>
                   {% endfor %}
               </select>
           </div>

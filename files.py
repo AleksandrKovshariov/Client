@@ -128,6 +128,49 @@ def resource(sub_path):
                                )
     return Response(req.iter_content(chunk_size=1024), headers=req.headers.items())
 
+@bp.route('/manage', methods=('GET', 'POST'))
+@login_required
+def manage():
+    access_token = session['access_token']
+
+    try:
+        r = requests.get(RES_PATH + '/access?access_type=GRANT', headers={
+            'Authorization': 'Bearer {}'.format(access_token)})
+        if not r.status_code == 200:
+            return render_error(r)
+    except requests.exceptions.RequestException:
+        return render_template('service_not_available.html', message='Cant send request to authorization server')
+
+    accesses = json.loads(r.text).get('access')
+
+    if request.method == 'POST':
+        access_list = request.form.getlist('access')
+        accesses = 'READ,'
+
+        for a in access_list:
+            accesses += a + ','
+        json_req = {
+            'to_user': request.form['username'],
+            'path': request.form['path'],
+            'access_type': accesses[:-1]
+        }
+        print(json_req)
+
+        try:
+            r = requests.post(RES_PATH + '/access', headers={
+            'Authorization': 'Bearer {}'.format(access_token)}, json=json_req)
+            if not r.status_code == 200:
+                return render_error(r)
+        except requests.exceptions.RequestException:
+            return render_template('service_not_available.html', message='Cant send request to authorization server')
+
+        access = json.loads(r.text)
+        print(access)
+        return render_template('files/adding_access_success.html', accesses=access)
+
+
+    return render_template('files/manage.html', accesses=accesses)
+
 
 @bp.route('/upload', methods=('GET', 'POST'))
 @login_required
@@ -142,11 +185,12 @@ def upload():
     except requests.exceptions.RequestException:
         return render_template('service_not_available.html', message='Cant send request to authorization server')
 
+
     access_dir = json.loads(r.text).get('access')
 
     if request.method == 'POST':
         try:
-            r = requests.post(RES_PATH, headers={
+            r = requests.post(RES_PATH + '/resource', headers={
                 'Authorization': 'Bearer {}'.format(access_token),
                 'Content-Length': request.headers.get('Content-Length'),
                 'Content-Type': request.headers.get('Content-Type')}, data=request.stream)
@@ -157,7 +201,7 @@ def upload():
         except requests.exceptions.RequestException:
             return render_template('service_not_available.html', message="Can't send a request to the server")
 
-        path = json.loads(r.text).get("saved")
+        path = json.loads(r.text).get('saved')
         return render_template('files/upload_seccess.html', path=path)
 
     return render_template('files/upload.html', access_dir=access_dir)
