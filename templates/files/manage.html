@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
+
+{% block  content %}
+    <br>
+    <div class="container">
+        <div class="row justify-content-md-center align-items-center">
+            <div class="col-md-6 jumbotron">
+                <h1 class="display-4">Manage access</h1>
+                <div id="status"></div>
+                <hr class="my-4">
+                <form id="upload_form" action="{{ url_for('files.manage') }}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Available resources:</label>
+                        <select name="path" class="form-control" id="select_path" required>
+                            {% for access in accesses %}
+                                <option value="{{ access['path']}}">{{ access['path'] }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Grant to:</label>
+                        <input name="username" id="to_username" class="form-control" placeholder="Username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="access" id="checkbox1" disabled="disabled"
+                                   value="READ" checked>
+                            <label class="form-check-label" for="checkbox1">
+                                READ
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="access" id="checkbox2" value="WRITE">
+                            <label class="form-check-label" for="checkbox2">
+                                WRITE
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="access" id="checkbox3" value="DELETE">
+                            <label class="form-check-label" for="checkbox3">
+                                DELETE
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="access" id="checkbox4" value="GRANT">
+                            <label class="form-check-label" for="checkbox4">
+                                GRANT
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <input id="submit" type="submit" class="btn btn-primary form-control" value="Grant"/>
+                    </div>
+                    <br>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
+{% endblock %}
