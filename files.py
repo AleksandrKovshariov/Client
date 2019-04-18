@@ -19,15 +19,21 @@ def index():
     return render_template('index.html')
 
 
-def render_error(req):
+def render_error(req, short=False):
     try:
         error_type = json.loads(req.text).get('error')
         print(error_type)
         if error_type is None:
-            return render_template('service_not_available.html', message="This is strange...")
-        return render_template('service_not_available.html', message=error_type)
+            message = "This is strange..."
+        else:
+            message = error_type
     except ValueError:
-        return render_template('service_not_available.html', message='Whooops... resource server error')
+        message = 'Whooops... resource server error'
+
+    if short:
+        return render_template('service_not_available_short.html', message=message)
+    else:
+        return render_template('service_not_available.html', message=message)
 
 
 @bp.route('/delete/<path:sub_path>')
@@ -128,6 +134,7 @@ def resource(sub_path):
                                )
     return Response(req.iter_content(chunk_size=1024), headers=req.headers.items())
 
+
 @bp.route('/manage', methods=('GET', 'POST'))
 @login_required
 def manage():
@@ -158,16 +165,16 @@ def manage():
 
         try:
             r = requests.post(RES_PATH + '/access', headers={
-            'Authorization': 'Bearer {}'.format(access_token)}, json=json_req)
+                'Authorization': 'Bearer {}'.format(access_token)}, json=json_req)
             if not r.status_code == 200:
-                return render_error(r)
+                return render_error(r, short=True)
         except requests.exceptions.RequestException:
-            return render_template('service_not_available.html', message='Cant send request to authorization server')
+            return render_template('service_not_available_short.html',
+                                   message='Cant send request to authorization server')
 
         access = json.loads(r.text)
         print(access)
         return render_template('files/adding_access_success.html', accesses=access)
-
 
     return render_template('files/manage.html', accesses=accesses)
 
@@ -185,7 +192,6 @@ def upload():
     except requests.exceptions.RequestException:
         return render_template('service_not_available.html', message='Cant send request to authorization server')
 
-
     access_dir = json.loads(r.text).get('access')
 
     if request.method == 'POST':
@@ -196,10 +202,10 @@ def upload():
                 'Content-Type': request.headers.get('Content-Type')}, data=request.stream)
 
             if not r.status_code == 200:
-                return render_error(r)
+                return render_error(r, short=True)
 
         except requests.exceptions.RequestException:
-            return render_template('service_not_available.html', message="Can't send a request to the server")
+            return render_template('service_not_available_short.html', message="Can't send a request to the server")
 
         path = json.loads(r.text).get('saved')
         return render_template('files/upload_seccess.html', path=path)
