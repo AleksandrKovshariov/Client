@@ -36,6 +36,8 @@ def login():
         session.clear()
         session['access_token'] = contents.get('access_token')
         session['username'] = username
+
+        print(contents)
         return redirect(url_for('files.access'))
 
     return render_template('auth/login.html')

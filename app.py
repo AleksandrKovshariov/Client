@@ -33,6 +33,8 @@ def create_app(test_config=None):
     # context.load_cert_chain('domain.crt', 'domain.key')
     # app.run(port = 5000, debug = True, ssl_context = context)
 
+if __name__ == '__main__':
+    create_app().run();
 
 # @app.before_request
 # def before_request():
